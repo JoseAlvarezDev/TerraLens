@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./img/satelite512px.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TerraLens | Exploración Satelital Orbital</title>
+
+    <!-- Robots & AI Indexing -->
+    <meta name="robots" content="index, follow" />
+    <meta name="ai-content-friendly" content="true" />
+
+    <!-- Structured Data (JSON-LD) for AI & Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "TerraLens",
+      "url": "https://josealvarezdev.github.io/TerraLens/",
+      "description": "Plataforma avanzada de exploración satelital en tiempo real con simulación de sensores orbitales.",
+      "applicationCategory": "MapApplication",
+      "operatingSystem": "All",
+      "abstract": "TerraLens permite visualizar la Tierra mediante diferentes constelaciones de satélites como Sentinel-2, Landsat y WorldView.",
+      "featureList": [
+        "Visualización satelital en tiempo real",
+        "Detección automática de capitales regionales",
+        "Simulación de sensores infrarrojos",
+        "Datos meteorológicos orbitales"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "TerraLens Team"
+      }
+    }
+    </script>
+
+    <!-- SEO & Social Media Meta Tags -->
+    <meta name="description"
+        content="TerraLens: La plataforma definitiva para la exploración satelital en tiempo real. Descubre la Tierra desde una perspectiva orbital con datos meteorológicos y post-procesamiento cinematográfico." />
+    <meta name="keywords"
+        content="satélite, mapa, tierra, exploración, tiempo real, terralens, orbital, meteorología" />
+    <meta name="author" content="TerraLens Team" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="TerraLens | Exploración Satelital Orbital" />
+    <meta property="og:description"
+        content="Explora el mundo a través de los ojos de las constelaciones de satélites más avanzadas." />
+    <meta property="og:image" content="https://josealvarezdev.github.io/TerraLens/img/satelite512px.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="TerraLens | Exploración Satelital Orbital" />
+    <meta property="twitter:description"
+        content="Explora el mundo a través de los ojos de las constelaciones de satélites más avanzadas." />
+    <meta property="twitter:image" content="https://josealvarezdev.github.io/TerraLens/img/satelite512px.png" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600&family=Space+Mono:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <!-- MapLibre & Utilities -->
+    <link href='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css' rel='stylesheet' />
+    <script src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/5.0.0/satellite.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Sidebar Menu -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">◉</span>
+                    <span class="logo-text">TERRA<span class="weight-light">LENS</span></span>
+                </div>
+                <button id="btn-close-sidebar" class="icon-btn">✕</button>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <h3>RECUPERACIÓN RECIENTE</h3>
+                    <div id="recent-searches" class="recent-list">
+                        <!-- Dynamically populated -->
+                        <p class="empty-msg">No hay registros recientes</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>FLOTA SATELITAL</h3>
+                    <div id="satellite-fleet" class="fleet-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>SISTEMAS DE LENTE</h3>
+                    <ul class="systems-list">
+                        <li><span class="dot active"></span> Tracking Orbital</li>
+                        <li><span class="dot active"></span> Giro-estabilizador</li>
+                        <li id="toggle-real-satellites" style="cursor:pointer;"><span class="dot"
+                                id="real-sat-dot"></span> Seguimiento Real (ISS/Starlink)</li>
+                    </ul>
+                </div>
+
+                <!-- Dynamic Real-Time Satellites List -->
+                <div id="real-satellites-section" class="sidebar-section hidden">
+                    <h3>TRÁFICO EN TIEMPO REAL</h3>
+                    <div id="real-satellites-list" class="real-satellites-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="dev-footer">
+                    <div class="avatar-mini">
+                        <img src="./img/satelite512px.png" alt="Satellite">
+                    </div>
+                    <div class="dev-info">
+                        <span class="copyright">©2026 Desarrollado por</span>
+                        <span class="dev-name">Jose Alvarez Dev</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Toggle Button (Under Logo Style) -->
+        <button id="btn-toggle-sidebar" class="sidebar-toggle" title="Abrir Menú">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M9 3v18" />
+            </svg>
+        </button>
+
+        <div id="map"></div>
+
+        <!-- Tactical Cursor System -->
+        <div id="tactical-cursor" class="tactical-cursor hidden">
+            <div class="cursor-line x"></div>
+            <div class="cursor-line y"></div>
+            <div class="cursor-center"></div>
+            <div class="cursor-coords" id="cursor-coords">00.0000, 00.0000</div>
+        </div>
+
+        <!-- Vignette Overlay for Cinematic One -->
+        <div class="vignette"></div>
+
+        <!-- Scanlines/Texture Overlay -->
+        <div class="texture-overlay"></div>
+
+        <!-- Atmospheric Weather Overlay -->
+        <div id="weather-overlay" class="weather-overlay"></div>
+
+        <!-- Main UI Interface -->
+        <div class="ui-layer">
+
+            <!-- Header -->
+            <header class="top-bar">
+                <div class="logo">
+                    <img src="./img/satelite512px.png" class="logo-sat-icon" alt="Satellite">
+                    <span class="logo-text">TERRA<span class="weight-light">LENS</span></span>
+                </div>
+                <div class="header-right">
+                    <div class="search-container">
+                        <input type="text" id="input-search" placeholder="BUSCAR LUGAR O CIUDAD..." autocomplete="off">
+                        <button id="btn-search">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                        <div id="search-results" class="search-results hidden"></div>
+                    </div>
+                    <div class="status-indicator">
+                        <img src="./img/satelite512px.png" class="status-sat-icon" alt="Satellite Status">
+                        <span class="indicator-text">CONEXIÓN A <span id="satellite-name">TERRALENS-01</span>
+                            ESTABLE</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dynamic Info Card (Bottom Left) -->
+            <div class="info-card hidden" id="info-card">
+                <div class="card-header">
+                    <span class="coords" id="location-coords">00°00'00"N 00°00'00"E</span>
+                    <span class="location-index" id="location-index">SATÉLITE ACTIVO</span>
+                </div>
+                <h1 class="location-name" id="location-name">Iniciando Sistemas...</h1>
+                <p class="location-desc" id="location-desc">Calibrando lentes de alta resolución...</p>
+                <div class="card-footer">
+                    <div class="meta-item"><span class="label">ALT:</span><span id="meta-alt">---</span></div>
+                    <div class="meta-item"><span class="label">TEMP:</span><span id="meta-temp">---</span></div>
+                    <div class="meta-item"><span class="label">HUM:</span><span id="meta-hum">---</span></div>
+                    <div class="meta-item"><span class="label">TIME:</span><span id="meta-time">---</span></div>
+                </div>
+            </div>
+
+            <!-- Tracking Monitor (Appears when active) -->
+            <div id="tracking-monitor" class="tracking-monitor hidden">
+                <div class="monitor-header">
+                    <div class="monitor-dot active"></div>
+                    <span class="monitor-title">MODO: RASTREO ORBITAL</span>
+                </div>
+                <div class="monitor-data">
+                    <div class="data-row"><span>SATS DETECTADOS:</span> <span id="tracked-count">0</span></div>
+                    <div class="data-row"><span>ISS TELEMETRÍA:</span> <span id="iss-pos">BUSCANDO...</span></div>
+                </div>
+                <div class="scanner-bar"></div>
+            </div>
+
+            <!-- Controls (Bottom Right) -->
+            <div class="controls-container">
+                <button class="control-btn" id="btn-gps" title="Mi Ubicación">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="m16 8-8 8" />
+                        <path d="m12 16 4-4" />
+                        <path d="m8 12 4 4" />
+                        <circle cx="12" cy="12" r="2" />
+                    </svg>
+                </button>
+
+                <button class="control-btn" id="btn-street" title="Vista de Calle">
+                    VISTA CALLE
+                </button>
+
+                <button class="control-btn icon-only" id="btn-snapshot" title="Guardar Captura">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                        </path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                </button>
+
+                <button class="control-btn icon-only" id="btn-real-tracking" title="Rastreo Satélites Reales">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path>
+                        <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6z"></path>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                </button>
+
+                <button class="control-btn icon-only" id="btn-play-pause" title="Pausar Tour">
+                    <svg id="icon-pause" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                    <svg id="icon-play" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </button>
+
+                <!-- Audio Toggle -->
+                <button class="control-btn icon-only" id="btn-audio" title="Audio Ambiente">
+                    <svg id="icon-audio-on" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                    <svg id="icon-audio-off" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Filter Selector (Right Side) -->
+            <div class="filter-dock">
+                <div class="filter-option active" data-filter="none" title="Natural">NAT</div>
+                <div class="filter-option" data-filter="infrared" title="Infrarrojo">IR</div>
+                <div class="filter-option" data-filter="ocean" title="Oceánico">OCN</div>
+                <div class="filter-option" data-filter="bw" title="Monocromo">B/W</div>
+            </div>
+
+        </div>
+
+        <!-- Splash Screen -->
+        <div id="loader" class="loader-overlay">
+            <div class="splash-container">
+                <div class="splash-logo">
+                    <img src="./img/satelite512px.png" class="splash-sat-image" alt="TerraLens Satellite">
+                </div>
+                <h1 class="splash-title">TERRA<span class="weight-light">LENS</span></h1>
+                <div class="splash-status">
+                    <div class="loader-bar">
+                        <div class="loader-progress"></div>
+                    </div>
+                    <div class="loader-text">INICIALIZANDO MONITOREO GLOBAL...</div>
+                </div>
+            </div>
+
+            <footer class="splash-footer">
+                <div class="footer-left">SISTEMA OPERATIVO DE VIGILANCIA ORBITAL v2.4.0</div>
+                <div class="footer-right">© 2026 Jose Alvarez Dev | TODOS LOS DERECHOS RESERVADOS</div>
+            </footer>
+        </div>
+    </div>
+
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
