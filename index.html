@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/TerraLens/assets/satelite512px-bgkgW3M5.png" />
+    <link rel="icon" type="image/png" href="./img/satelite512px.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TerraLens | Exploración Satelital Orbital</title>
 
@@ -47,14 +47,14 @@
     <meta property="og:title" content="TerraLens | Exploración Satelital Orbital" />
     <meta property="og:description"
         content="Explora el mundo a través de los ojos de las constelaciones de satélites más avanzadas." />
-    <meta property="og:image" content="/src/assets/img/satelite512px.png" />
+    <meta property="og:image" content="https://josealvarezdev.github.io/TerraLens/img/satelite512px.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content="TerraLens | Exploración Satelital Orbital" />
     <meta property="twitter:description"
         content="Explora el mundo a través de los ojos de las constelaciones de satélites más avanzadas." />
-    <meta property="twitter:image" content="/src/assets/img/satelite512px.png" />
+    <meta property="twitter:image" content="https://josealvarezdev.github.io/TerraLens/img/satelite512px.png" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,8 +65,8 @@
     <link href='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css' rel='stylesheet' />
     <script src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/5.0.0/satellite.min.js"></script>
-  <script type="module" crossorigin src="/TerraLens/assets/index-epAke-jW.js"></script>
-  <link rel="stylesheet" crossorigin href="/TerraLens/assets/index-CJS__Qhv.css">
+  <script type="module" crossorigin src="/TerraLens/assets/index-Cewz8tPg.js"></script>
+  <link rel="stylesheet" crossorigin href="/TerraLens/assets/index-B1nVMG7a.css">
 </head>
 
 <body>
@@ -119,7 +119,7 @@
             <div class="sidebar-footer">
                 <div class="dev-footer">
                     <div class="avatar-mini">
-                        <img src="/TerraLens/assets/satelite512px-bgkgW3M5.png" alt="Satellite">
+                        <img src="./img/satelite512px.png" alt="Satellite">
                     </div>
                     <div class="dev-info">
                         <span class="copyright">©2026 Desarrollado por</span>
@@ -140,6 +140,14 @@
 
         <div id="map"></div>
 
+        <!-- Tactical Cursor System -->
+        <div id="tactical-cursor" class="tactical-cursor hidden">
+            <div class="cursor-line x"></div>
+            <div class="cursor-line y"></div>
+            <div class="cursor-center"></div>
+            <div class="cursor-coords" id="cursor-coords">00.0000, 00.0000</div>
+        </div>
+
         <!-- Vignette Overlay for Cinematic One -->
         <div class="vignette"></div>
 
@@ -155,7 +163,7 @@
             <!-- Header -->
             <header class="top-bar">
                 <div class="logo">
-                    <img src="/TerraLens/assets/satelite512px-bgkgW3M5.png" class="logo-sat-icon" alt="Satellite">
+                    <img src="./img/satelite512px.png" class="logo-sat-icon" alt="Satellite">
                     <span class="logo-text">TERRA<span class="weight-light">LENS</span></span>
                 </div>
                 <div class="header-right">
@@ -171,7 +179,7 @@
                         <div id="search-results" class="search-results hidden"></div>
                     </div>
                     <div class="status-indicator">
-                        <img src="/TerraLens/assets/satelite512px-bgkgW3M5.png" class="status-sat-icon" alt="Satellite Status">
+                        <img src="./img/satelite512px.png" class="status-sat-icon" alt="Satellite Status">
                         <span class="indicator-text">CONEXIÓN A <span id="satellite-name">TERRALENS-01</span>
                             ESTABLE</span>
                     </div>
@@ -251,6 +259,21 @@
                         <polygon points="5 3 19 12 5 21 5 3"></polygon>
                     </svg>
                 </button>
+
+                <!-- Audio Toggle -->
+                <button class="control-btn icon-only" id="btn-audio" title="Audio Ambiente">
+                    <svg id="icon-audio-on" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                    <svg id="icon-audio-off" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                </button>
             </div>
 
             <!-- Filter Selector (Right Side) -->
@@ -267,7 +290,7 @@
         <div id="loader" class="loader-overlay">
             <div class="splash-container">
                 <div class="splash-logo">
-                    <img src="/TerraLens/assets/satelite512px-bgkgW3M5.png" class="splash-sat-image" alt="TerraLens Satellite">
+                    <img src="./img/satelite512px.png" class="splash-sat-image" alt="TerraLens Satellite">
                 </div>
                 <h1 class="splash-title">TERRA<span class="weight-light">LENS</span></h1>
                 <div class="splash-status">
